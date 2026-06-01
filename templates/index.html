@@ -3,3 +3,68 @@ Date : 28/05/2026
 Auteur : WARIE Estelle
 But : Création de la platforme QuIZ
 -->
+<!DOCTYPE html>
+<html lang = "fr" data-theme ="light">
+<head>    
+    <meta charset="UTF-8" />
+    <meta name ="viewport " content="width=device-width, initial-scale=1.0" />
+    <title>QuizAi - Apprends mieux, plus vite </title>
+    <link rel="stylesheet" href = "{{ url_for('static' , filename='css/style.css')}}" />
+
+</head>
+<body>
+    <nav class="navbar"><!--contient toute la barre de navigation-->
+        <div class="nav-logo"><!--côté gauche-logo + nom du site -->
+            <span class="logo-icon">⚡</span><!--⚡icone décorative -->
+            <span class="logo-text">QuizAI</span>
+        </div>
+
+        <div class="nav-actions"><!--côte droite-boutons -->
+            <button class="theme-toggle" id="themeToggle" title="Cjanger le thème"><!--Switcher clair/sombre -->
+               🌙
+            </button>  
+            <a href="/auth" class="btn btn-outline">Connexion</a><!--btn-outlne: bouton transparent avec bordure-->
+            <a href="/auth" class="btn btn-primary"> S'inscrire</a><!--btn-primary: bouton plein coloré -->
+        </div>
+    </nav>  
+
+
+    <main><!--contenu principal de la page -->
+        
+        <section class="hero">
+            <div class="hero-content"><!-- côté gauche: titre + texte + boutons-->
+                <h1 class="hero-title">
+                    Transforme ton cours en quiz<br />
+                    <span class="highlight">en quelques secondes</span><!-- texte en couleur dans le titre -->
+                </h1>
+                <p class="hero-subtitle"><!--phrase d'explication courte-->
+                    Uploade ton PDF, choisis ta difficulté,<br />
+                    et laisse l'IA générer ton quiz automatiquement.
+                </p>
+                <div class="hero-buttons"><!--représente les deux boutons d´action-->
+                    <a href="/auth" class="btn btn-primary btn-large">
+                        Commencer gratuitement → 
+                    </a> 
+                    <a href="/library" class="btn btn-outline btn-large">
+                        Voir la bibliothèque 
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual"><!--Côté droit: montrant une fausse carte de quiz pour illustrer-->
+                <div class="quiz-card-demo"><!-- donne une idée visuelle du produit-->
+                    <p class="demo-question">❓ Quelle est la capitale du Togo ?</p>
+                    <ul class="demo-option">
+                        <li class="demo-option">A. Accra</li>
+                        <li class="demo-option correct ">B. Lomé ✓</li>
+                        <li class="demo-option">C. Cotonou</li>
+                        <li class="demo-option">D. Abidjan</li>
+                    </ul>
+                </div>
+            </div>
+        </section>                
+
+
+</body>
+
+
