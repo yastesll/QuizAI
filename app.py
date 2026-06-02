@@ -3,7 +3,8 @@ Date : 25/05/2025
 BUT : Importer Flask & Créer l'application
 Auteur : VIDZRAKOU
 """
-# on importe les modules nécessaires pour notre application Flask
+# on importe les modules nécessaires pour notre application Flask   
+import fitz
 from flask import Flask , render_template , request , redirect , url_for , session
 # on importe les fonctions pour gérer les mots de passe et les sessions
 from werkzeug.security import generate_password_hash , check_password_hash     
@@ -82,9 +83,11 @@ def library():
 def upload():
     return render_template('upload.html') # on affiche la page pour télécharger un quiz
 
-@app.route('/config')
-def config():
-    return render_template('config.html') # on affiche la page de configuration du compte utilisateur
+@app.route('/config/<int:course_id>')
+def config(course_id):
+    if 'user_id' not in session: # si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
+        return redirect(url_for('login')) # si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
+    return render_template('config.html', course_id=course_id) # on affiche la page de configuration du quiz, en passant l'identifiant du quiz dans le contexte pour pouvoir l'utiliser dans la page de configuration
 
 @app.route('/quiz')
 def quiz():
@@ -97,5 +100,32 @@ def results():
 @app.route('/auth')
 def auth():
     return render_template('auth.html') # on affiche la page d'authentification (inscription et connexion)
+@app.route('/upload', methods=['GET', 'POST'])
+def upload(): # on définit la route pour la page de téléchargement d'un quiz, qui accepte à la fois les requêtes GET et POST
+    if 'user_id' not in session: # si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
+        return redirect(url_for('login'))# si la méthode de la requête est POST, cela signifie que le formulaire a été soumis
+    if request.method == 'POST':
+        titre = request.form['titre'] # on récupère le titre du quiz depuis le formulaire
+        texte = request.form['texte'] # on récupère le texte du quiz depuis le formulaire
+        fichier = request.files['fichier'] # on récupère le fichier PDF du quiz depuis le formulaire
+        if fichier and fichier.filename.endswith('.pdf'):
+            contenu = fichier.read() # on lit le contenu du fichier PDF
+            doc = fitz.open(stream=contenu, filetype='pdf') # on ouvre le fichier PDF avec la bibliothèque fitz pour extraire le texte
+            texte = "" # on initialise une variable pour stocker le texte extrait du PDF
+            for page in doc:
+                texte += page.get_text() # on extrait le texte de chaque page du PDF et on l'ajoute à la variable texte
+        if not texte:
+            return render_template('upload.html', error="Veuillez fournir un PDF ou du texte !") # si aucun texte n'est fourni, on affiche un message d'erreur
+        conn = get_db() # on obtient une connexion à la base de données
+        cursor = conn.cursor() # on crée un curseur pour exécuter des commandes SQL
+        cursor.execute(
+            'INSERT INTO courses (user_id, titre, contenu) VALUES (?, ?, ?)',
+            (session['user_id'], titre, texte)
+        ) # on insère les données du quiz dans la table courses, en associant le quiz à l'utilisateur connecté grâce à son identifiant stocké dans la session
+        conn.commit() # on valide les changements dans la base de données
+        course_id = cursor.lastrowid # on récupère l'identifiant du quiz nouvellement créé pour pouvoir rediriger l'utilisateur vers la page de configuration du quiz
+        conn.close() # on ferme la connexion à la base de données
+        return redirect(url_for('config', course_id=course_id))# on redirige l'utilisateur vers la page de configuration du quiz, en passant l'identifiant du quiz dans l'URL pour pouvoir le récupérer dans la page de configuration
+    return render_template('upload.html') # si la méthode de la requête est GET, on affiche le formulaire de téléchargement d'un quiz
 if __name__ == '__main__':
     app.run(debug=True)

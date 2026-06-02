@@ -1,0 +1,118 @@
+<!--
+    Fichier : config.html
+    Auteur : VIDZRAKOU
+    Date : 30/05/2026
+    But : Configuration du quiz - choix difficulté et nombre de questions
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuizAI - Configuration du quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    <nav class="navbar"> #- Barre de navigation
+        <div class="nav-logo">
+            <span class="logo-text">QuizAI</span>
+        </div>
+        <div class="nav-actions">
+            <a href="/dashboard" class="btn btn-outline">Tableau de bord</a>
+            <a href="/logout" class="btn btn-primary">Déconnexion</a>
+        </div>
+    </nav>
+
+    <main class="main-container"> #- Contenu principal de la page
+        <h1 class="page-title">Configuration du quiz</h1>
+        <p class="page-subtitle">Choisis la difficulté et le nombre de questions</p>
+
+        <div class="config-box"> #- Boîte de configuration du quiz
+            <form id="configForm">
+                <div class="form-group">
+                    <label>Niveau de difficulté</label>
+                    <div class="difficulty-buttons">
+                        <button type="button" class="difficulty-btn" data-difficulty="facile">
+                            Facile
+                        </button>
+                        <button type="button" class="difficulty-btn" data-difficulty="moyen">
+                            Moyen
+                        </button>
+                        <button type="button" class="difficulty-btn" data-difficulty="difficile">
+                            Difficile
+                        </button>
+                    </div>
+                    <input type="hidden" id="difficulte" name="difficulte" value="" />
+                </div>
+
+                <div class="form-group"> #  - Choix du nombre de questions avec un slider
+                    <label>Nombre de questions : <span id="questionCount">5</span></label>
+                    <input type="range" id="nombreQuestions" name="nombre_questions" min="3" max="20" value="5" />
+                    <div class="range-labels"> # - Affichage des valeurs min et max du slider
+                        <span>3</span>
+                        <span>20</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full"> # - Bouton pour générer le quiz
+                    Générer le quiz →
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Récupère l'ID du cours depuis Flask
+        const courseId = {{ course_id }};
+
+        // Gère les boutons de difficulté
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('difficulte').value = this.dataset.difficulty;
+            });
+        });
+
+        // Met à jour le nombre de questions affichée
+        document.getElementById('nombreQuestions').addEventListener('input', function() {
+            document.getElementById('questionCount').textContent = this.value;
+        });
+
+        // Soumet le formulaire
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const difficulte = document.getElementById('difficulte').value;
+            const nombreQuestions = document.getElementById('nombreQuestions').value;
+
+            if (!difficulte) {
+                alert('Veuillez choisir une difficulté !');
+                return;
+            }
+
+            // Envoie les données à Flask via fetch
+            fetch('/generate-quiz', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    course_id: courseId,
+                    difficulte: difficulte,
+                    nombre_questions: parseInt(nombreQuestions)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/quiz/' + data.quiz_id;
+                } else {
+                    alert('Erreur : ' + data.error);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+    </script>
+</body>
+</html>
