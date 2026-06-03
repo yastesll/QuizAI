@@ -12,10 +12,14 @@ from dotenv import load_dotenv
 # on importe les fonctions pour interagir avec la base de données
 import sqlite3
 import os
+import google.generativeai as genai # on importe la bibliothèque pour interagir avec l'API Gemini de Google pour générer les quizs à partir du contenu des cours
 app = Flask(__name__)
 
 load_dotenv() # on charge les variables d'environnement depuis le fichier .env
 app.secret_key = os.getenv('SECRET_KEY') # on définit la clé secrète de l'application à partir de la variable d'environnement
+
+# Configuration Gemini API
+genai.configure(api_key=os.getenv('GEMINI_API_KEY')) # on configure la bibliothèque genai avec la clé API de Gemini stockée dans les variables d'environnement
 
 def get_db():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # on obtient le chemin du répertoire actuel
@@ -127,5 +131,64 @@ def upload(): # on définit la route pour la page de téléchargement d'un quiz,
         conn.close() # on ferme la connexion à la base de données
         return redirect(url_for('config', course_id=course_id))# on redirige l'utilisateur vers la page de configuration du quiz, en passant l'identifiant du quiz dans l'URL pour pouvoir le récupérer dans la page de configuration
     return render_template('upload.html') # si la méthode de la requête est GET, on affiche le formulaire de téléchargement d'un quiz
+
+@app.route('/generate-quiz', methods=['POST']) # on définit la route pour générer un quiz à partir d'un cours, qui accepte uniquement les requêtes POST
+def generate_quiz():
+    if 'user_id' not in session:
+        return redirect(url_for('login')) # si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
+    
+    data = request.get_json() # on récupère les données envoyées depuis la page de configuration du quiz au format JSON
+    course_id = data['course_id'] # on récupère l'identifiant du cours à partir des données envoyées
+    difficulte = data['difficulte'] # on récupère la difficulté choisie pour le quiz à partir des données envoyées
+    nombre_questions = data['nombre_questions'] # on récupère le nombre de questions choisi pour le quiz à partir des données envoyées
+    
+    # Récupère le contenu du cours
+    conn = get_db() # on obtient une connexion à la base de données
+    cursor = conn.cursor() # on crée un curseur pour exécuter des commandes SQL
+    course = cursor.execute(
+        'SELECT * FROM courses WHERE id = ? AND user_id = ?',
+        (course_id, session['user_id'])
+    ).fetchone() # on cherche le cours dans la base de données en fonction de son identifiant et de l'identifiant de l'utilisateur pour s'assurer que l'utilisateur a le droit d'accéder à ce cours
+    conn.close() # on ferme la connexion à la base de données
+    
+    if not course:
+        return {'success': False, 'error': 'Cours non trouvé'}, 400 # si le cours n'est pas trouvé ou que l'utilisateur n'a pas le droit d'y accéder, on retourne une erreur au format JSON
+    
+    # appel à Gemini API pour générer les questions du quiz à partir du contenu du cours, de la difficulté choisie et du nombre de questions souhaité
+    model = genai.GenerativeModel('gemini-pro') # on crée une instance du modèle de génération de texte de Gemini Pro
+    prompt = f""" tu es expert pédaogique. A partire du contenu suivant, génère exactement {nombre_questions} questions QCM en français.
+    Régle strictes :
+    - Chaque question doit avoir 4 propositions de réponses, dont une seule est correcte.
+    -une seule bonne réponse par question
+    -Difficulté : {difficulte}
+    -Retourne UNIQUEMENT UN TABLEAU JSON valide, sans texte avant ni apprés
+    - Format:[{{"question":"...","options":["A. ...","B. ...","C. ...","D. ..."],"correct":0,"explication":"..."}}]
+    -"correct" = index de la bonne réponse (0, 1, 2 ou 3)
+
+    contenue du cours :
+    {course['contenu'][:2000]}""" # on construit le prompt à envoyer à l'API Gemini en incluant les instructions pour générer les questions, la difficulté choisie, le nombre de questions souhaité et un extrait du contenu du cours pour que l'API puisse s'en inspirer pour générer des questions pertinentes
+    try:
+        response = model.generate_content(prompt) # on envoie le prompt à l'API Gemini pour générer les questions du quiz
+        import json
+        questions_text = response.text # on récupère le texte de la réponse de l'API, qui devrait être un tableau JSON de questions
+        if '```json' in questions_text:
+            questions_text = questions_text.split('```json')[1].split('```')[0] # Extraction du contenu JSON
+        elif '```' in questions_text:
+            questions_text = questions_text.split('```')[1].split('```')[0] # Extraction du contenu JSON
+        questions = json.loads(questions_text) # on parse le texte de la réponse pour obtenir un tableau de questions au format JSON
+    except Exception as e:
+        return {'success': False, 'error': f'Erreur lors de la génération du quiz : {str(e)}'}, 500 # si une erreur survient lors de l'appel à l'API Gemini ou du parsing de la réponse, on retourne une erreur au format JSON
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute(
+        'INSERT INTO quizzes (user_id, course_id, titre, difficulte, questions) VALUES (?, ?, ?, ?, ?)',
+        (session['user_id'], course_id, course['titre'], difficulte, str(questions)) # on insère les données du quiz dans la table quizzes, en associant le quiz à l'utilisateur connecté grâce à son identifiant stocké dans la session et au cours auquel le quiz est associé grâce à son identifiant
+    ) # on insère les données du quiz dans la table quizzes, en associant le quiz à l'utilisateur connecté grâce à son identifiant stocké dans la session et au cours auquel le quiz est associé grâce à son identifiant
+    conn.commit()
+    quiz_id = cursor.lastrowid
+    conn.close()
+    
+    return {'success': True, 'quiz_id': quiz_id} # on retourne une réponse au format JSON indiquant que le quiz a été généré avec succès et en incluant l'identifiant du quiz nouvellement créé pour pouvoir rediriger l'utilisateur vers la page de jeu du quiz
 if __name__ == '__main__':
     app.run(debug=True)
