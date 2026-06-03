@@ -1,0 +1,175 @@
+<!--
+    Fichier : quiz.html
+    Auteur : VIDZRAKOU
+    Date : 01/06/2026
+    But : Page du quiz interactif - question par question avec timer
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuizAI - Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">
+            <span class="logo-text">QuizAI</span>
+        </div>
+        <div class="nav-actions">
+            <a href="/dashboard" class="btn btn-outline">Quitter</a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="quiz-container">
+            
+            <!-- Barre de progression -->
+            <div class="quiz-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- Compteur questions -->
+            <div class="quiz-header">
+                <span class="question-counter">Question <span id="currentQuestion">1</span> / <span id="totalQuestions">0</span></span>
+                <span class="timer" id="timer">00:30</span>
+            </div>
+
+            <!-- Question -->
+            <div class="quiz-box">
+                <h2 class="question-text" id="questionText"></h2>
+
+                <!-- Options -->
+                <div class="options-container" id="optionsContainer"></div>
+
+                <!-- Boutons -->
+                <div class="quiz-buttons">
+                    <button type="button" class="btn btn-outline" id="prevBtn" style="display:none;">← Précédent</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">Suivant →</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizId = {{ quiz_id }}; // Récupère l'ID du quiz depuis Flask
+        let questions = []; // Stocke les questions du quiz
+        let currentQuestionIndex = 0; //    Index de la question actuelle
+        let answers = []; // Stocke les réponses sélectionnées par l'utilisateur
+        let timeRemaining = 30; // Temps restant pour répondre à chaque question (en secondes)
+        let timerInterval; // Variable pour stocker l'intervalle du timer
+
+        // Charge les questions depuis Flask
+        fetch(`/get-quiz/${quizId}`)  // Envoie une requête pour obtenir les questions du quiz
+            .then(response => response.json()) // Convertit la réponse en JSON
+            .then(data => {    // Stocke les questions et initialise le quiz
+                questions = data.questions;
+                document.getElementById('totalQuestions').textContent = questions.length;
+                answers = new Array(questions.length).fill(null);
+                displayQuestion();
+                startTimer();
+            }) // Affiche la première question et démarre le timer
+            .catch(error => console.error('Erreur:', error));  // Affiche une erreur en cas de problème lors du chargement des questions
+
+        // Affiche la question actuelle
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex]; // Récupère la question actuelle
+            document.getElementById('questionText').textContent = question.question; // Affiche le texte de la question
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1; //   Affiche le numéro de la question actuelle
+
+            // Options
+            const optionsContainer = document.getElementById('optionsContainer'); // Récupère le conteneur des options
+            optionsContainer.innerHTML = ''; // Vide les options précédentes
+            question.options.forEach((option, index) => { // Parcourt les options de la question
+                const btn = document.createElement('button'); // Crée un bouton pour chaque option
+                btn.className = 'option-btn'; // Ajoute la classe CSS pour le style
+                btn.textContent = option; // Affiche le texte de l'option
+                if (answers[currentQuestionIndex] === index) { // Si l'option est déjà sélectionnée, la marque comme active
+                    btn.classList.add('selected');
+                }
+                btn.addEventListener('click', function() { // Ajoute un événement de clic pour sélectionner une option
+                    selectAnswer(index);
+                });
+                optionsContainer.appendChild(btn);
+            });
+
+            // Mise à jour barre de progression
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100; // Calcule le pourcentage de progression
+            document.getElementById('progressBar').style.width = progress + '%'; // Met à jour la largeur de la barre de progression
+
+            // Boutons navigation
+            document.getElementById('prevBtn').style.display = currentQuestionIndex > 0 ? 'block' : 'none'; // Affiche le bouton "Précédent" uniquement si ce n'est pas la première question
+            document.getElementById('nextBtn').textContent = currentQuestionIndex === questions.length - 1 ? 'Terminer →' : 'Suivant →'; // Change le texte du bouton "Suivant" en "Terminer" si c'est la dernière question
+        }
+
+        // Sélectionne une réponse
+        function selectAnswer(index) { // Enregistre la réponse sélectionnée pour la question actuelle
+            answers[currentQuestionIndex] = index; // Met à jour l'affichage des options pour refléter la sélection
+            displayQuestion(); // Réaffiche la question pour mettre à jour les styles des options
+        }
+
+        // Navigation
+        document.getElementById('nextBtn').addEventListener('click', function() { // Passe à la question suivante ou termine le quiz si c'est la dernière question
+            if (currentQuestionIndex < questions.length - 1) { // Si ce n'est pas la dernière question, passe à la suivante
+                currentQuestionIndex++; // Affiche la question suivante
+                displayQuestion(); // Affiche la question suivante
+            } else {
+                submitQuiz(); // Si c'est la dernière question, soumet le quiz
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', function() { // Revient à la question précédente
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--; // Affiche la question précédente
+                displayQuestion(); // Affiche la question précédente
+            }
+        });
+
+        // Timer
+        function startTimer() {
+            timerInterval = setInterval(function() { // Met à jour le timer toutes les secondes
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval); // Arrête le timer lorsque le temps est écoulé
+                    submitQuiz(); // Soumet le quiz automatiquement si le temps est écoulé
+                } else {
+                    timeRemaining--;
+                    const minutes = Math.floor(timeRemaining / 60); //  Calcule les minutes restantes
+                    const seconds = timeRemaining % 60; // Calcule les secondes restantes
+                    document.getElementById('timer').textContent = 
+                        String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0'); // Affiche le timer au format MM:SS
+                }
+            }, 1000); // Intervalle de 1 seconde
+        }
+
+        // Soumission du quiz
+        function submitQuiz() {
+            clearInterval(timerInterval); // Arrête le timer lorsque le quiz est soumis
+            
+            // Calcule le score
+            let score = 0;
+            questions.forEach((q, i) => {
+                if (answers[i] === q.correct) { // Vérifie si la réponse sélectionnée est correcte
+                    score++;
+                }
+            });
+
+            // Envoie les résultats
+            fetch('/save-result', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }, // Envoie les données du quiz (ID, score, réponses) à Flask pour les enregistrer et afficher les résultats
+                body: JSON.stringify({
+                    quiz_id: quizId,
+                    score: score,
+                    total_questions: questions.length,
+                    answers: answers
+                }) // Convertit les données en JSON
+            })
+            .then(response => response.json()) // Convertit la réponse en JSON
+            .then(data => {
+                window.location.href = '/results/' + data.session_id; // Redirige vers la page des résultats en utilisant l'ID de session retourné par Flask
+            });
+        }
+    </script>
+</body>
+</html>

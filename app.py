@@ -83,10 +83,6 @@ def accueil():
 def library():
     return render_template('library.html') # on affiche la page de la bibliothèque de quizs
 
-@app.route('/upload')
-def upload():
-    return render_template('upload.html') # on affiche la page pour télécharger un quiz
-
 @app.route('/config/<int:course_id>')
 def config(course_id):
     if 'user_id' not in session: # si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
@@ -190,5 +186,58 @@ def generate_quiz():
     conn.close()
     
     return {'success': True, 'quiz_id': quiz_id} # on retourne une réponse au format JSON indiquant que le quiz a été généré avec succès et en incluant l'identifiant du quiz nouvellement créé pour pouvoir rediriger l'utilisateur vers la page de jeu du quiz
+
+@app.route('/get-quiz/<int:quiz_id>')
+def get_quiz(quiz_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    quiz = cursor.execute(
+        'SELECT * FROM quizzes WHERE id = ? AND user_id = ?',
+        (quiz_id, session['user_id'])
+    ).fetchone()
+    conn.close()
+    
+    if not quiz:
+        return {'error': 'Quiz non trouvé'}, 404
+    
+    import json
+    questions = json.loads(quiz['questions'])
+    return {'quiz_id': quiz_id, 'questions': questions}
+
+
+@app.route('/quiz/<int:quiz_id>')
+def quiz_page(quiz_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('quiz.html', quiz_id=quiz_id)
+
+
+@app.route('/save-result', methods=['POST'])
+def save_result():
+    if 'user_id' not in session:
+        return {'error': 'Non authentifié'}, 401
+    
+    data = request.get_json()
+    quiz_id = data['quiz_id']
+    score = data['score']
+    total_questions = data['total_questions']
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute(
+        'INSERT INTO quiz_sessions (user_id, quiz_id, score, total_questions) VALUES (?, ?, ?, ?)',
+        (session['user_id'], quiz_id, score, total_questions)
+    )
+    conn.commit()
+    session_id = cursor.lastrowid
+    conn.close()
+    
+    return {'session_id': session_id}
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
