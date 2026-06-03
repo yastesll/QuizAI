@@ -1,0 +1,728 @@
+/* 
+    Fichier : style.css
+    Auteur : ADAMBOUNOU & ASSOKI
+    Date : 03/06/2026
+    But : styles globaux du projet QuizAI
+*/
+
+/* Variables de couleurs */
+:root {
+    --bleu: #1a237e;
+    --vert: #00c853;
+    --blanc: #ffffff;
+    --gris: #f5f5f5;
+    --gris-clair: #e0e0e0;
+    --texte: #333333;
+    --texte-light: #666666;
+}
+
+/* Reset global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body { /* on définit le style global du body */
+    font-family: Arial, sans-serif; /* on utilise Arial comme police par défaut */
+    background-color: var(--gris); /* on utilise la couleur gris définie dans les variables */
+    color: var(--texte); /* on utilise la couleur texte définie dans les variables */
+    line-height: 1.6; /* on définit l'hauteur de ligne */
+}
+
+/* Navbar */
+.navbar { /* on définit le style de la navbar */
+    background-color: var(--bleu); /* on utilise la couleur bleu définie dans les variables */
+    color: var(--blanc); /* on définit la couleur du texte en blanc */
+    padding: 1rem 2rem; /* on ajoute du padding */
+    display: flex; /* on utilise flexbox pour aligner les éléments */
+    justify-content: space-between; /* on espace les éléments */
+    align-items: center; /* on aligne les éléments verticalement */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* on ajoute une ombre */
+}
+
+.nav-logo { /* on définit le style du logo de la navbar */
+    font-size: 1.5rem; /* on augmente la taille du texte */
+    font-weight: bold; /* on rend le texte gras */
+}
+
+.nav-actions { /* on définit le style des actions de la navbar */
+    display: flex; /* on utilise flexbox */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+}
+
+/* Boutons */
+.btn { /* on définit le style global des boutons */
+    padding: 0.75rem 1.5rem; /* on ajoute du padding */
+    border: none; /* on enlève la bordure */
+    border-radius: 5px; /* on arrondit les coins */
+    cursor: pointer; /* on change le curseur */
+    text-decoration: none; /* on enlève la décoration du texte */
+    display: inline-block; /* on fait que le bouton soit inline-block */
+    font-size: 1rem; /* on définit la taille du texte */
+    transition: all 0.3s ease; /* on ajoute une transition */
+}
+
+.btn-primary { /* on définit le style des boutons primaires */
+    background-color: var(--vert); /* on utilise la couleur vert */
+    color: var(--blanc); /* on utilise la couleur blanc pour le texte */
+}
+
+.btn-primary:hover { /* on définit le style au survol */
+    background-color: #00a040; /* on assombrit la couleur */
+    transform: translateY(-2px); /* on ajoute une animation */
+}
+
+.btn-outline { /* on définit le style des boutons avec bordure */
+    background-color: transparent; /* on rend le fond transparent */
+    color: var(--texte); /* on utilise la couleur texte */
+    border: 2px solid var(--texte); /* on ajoute une bordure */
+}
+
+.btn-outline:hover { /* on définit le style au survol */
+    background-color: var(--gris); /* on assombrit le fond */
+}
+
+.btn-full { /* on définit le style des boutons pleine largeur */
+    width: 100%; /* on utilise 100% de la largeur */
+}
+
+.btn-large { /* on définit le style des gros boutons */
+    padding: 1rem 2rem; /* on augmente le padding */
+    font-size: 1.1rem; /* on augmente la taille du texte */
+}
+
+/* Container principal */
+.main-container { /* on définit le style du conteneur principal */
+    max-width: 1200px; /* on définit la largeur maximale */
+    margin: 2rem auto; /* on centre le conteneur */
+    padding: 0 2rem; /* on ajoute du padding */
+}
+
+/* Titres */
+.page-title { /* on définit le style du titre de la page */
+    font-size: 2.5rem; /* on augmente la taille du texte */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    margin-bottom: 0.5rem; /* on ajoute de l'espace en bas */
+}
+
+.page-subtitle { /* on définit le style du sous-titre */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    font-size: 1.1rem; /* on définit la taille du texte */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+/* Formulaires */
+.form-group { /* on définit le style des groupes de formulaire */
+    margin-bottom: 1.5rem; /* on ajoute de l'espace en bas */
+}
+
+label { /* on définit le style des labels */
+    display: block; /* on rend le label bloc */
+    margin-bottom: 0.5rem; /* on ajoute de l'espace en bas */
+    font-weight: bold; /* on rend le texte gras */
+    color: var(--bleu); /* on utilise la couleur bleu */
+}
+
+input[type="text"], input[type="email"], input[type="password"], textarea, input[type="file"], input[type="range"] { /* on définit le style des champs de formulaire */
+    width: 100%; /* on utilise 100% de la largeur */
+    padding: 0.75rem; /* on ajoute du padding */
+    border: 1px solid var(--gris-clair); /* on ajoute une bordure grise */
+    border-radius: 5px; /* on arrondit les coins */
+    font-size: 1rem; /* on définit la taille du texte */
+    font-family: Arial, sans-serif; /* on utilise Arial comme police */
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus { /* on définit le style au focus */
+    outline: none; /* on enlève l'outline par défaut */
+    border-color: var(--bleu); /* on change la couleur de la bordure */
+    box-shadow: 0 0 5px rgba(26, 35, 126, 0.3); /* on ajoute une ombre */
+}
+
+/* Boxes */
+.auth-container { /* on définit le style du conteneur d'authentification */
+    display: flex; /* on utilise flexbox */
+    justify-content: center; /* on centre les éléments */
+    align-items: center; /* on aligne les éléments verticalement */
+    min-height: 80vh; /* on définit la hauteur minimale */
+}
+
+.auth-box { /* on définit le style de la boîte d'authentification */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+    width: 100%; /* on utilise 100% de la largeur */
+    max-width: 400px; /* on définit la largeur maximale */
+}
+
+.auth-logo { /* on définit le style du logo d'authentification */
+    text-align: center; /* on centre le texte */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+    font-size: 2rem; /* on augmente la taille du texte */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    font-weight: bold; /* on rend le texte gras */
+}
+
+.auth-title { /* on définit le style du titre d'authentification */
+    text-align: center; /* on centre le texte */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    margin-bottom: 1.5rem; /* on ajoute de l'espace en bas */
+}
+
+.auth-switch { /* on définit le style du lien pour basculer entre connexion et inscription */
+    text-align: center; /* on centre le texte */
+    margin-top: 1rem; /* on ajoute de l'espace en haut */
+}
+
+.auth-switch a { /* on définit le style du lien */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    text-decoration: none; /* on enlève la décoration du texte */
+    font-weight: bold; /* on rend le texte gras */
+}
+
+.error-message { /* on définit le style du message d'erreur */
+    color: #d32f2f; /* on utilise une couleur rouge */
+    padding: 1rem; /* on ajoute du padding */
+    background-color: #ffebee; /* on utilise une couleur de fond rouge clair */
+    border-radius: 5px; /* on arrondit les coins */
+    margin-bottom: 1rem; /* on ajoute de l'espace en bas */
+}
+
+/* Upload */
+.upload-box { /* on définit le style de la boîte d'upload */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+}
+
+/* Config */
+.config-box { /* on définit le style de la boîte de configuration */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+    max-width: 600px; /* on définit la largeur maximale */
+    margin: 0 auto; /* on centre la boîte */
+}
+
+.difficulty-buttons { /* on définit le style des boutons de difficulté */
+    display: flex; /* on utilise flexbox */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+    margin-bottom: 1rem; /* on ajoute de l'espace en bas */
+}
+
+.difficulty-btn { /* on définit le style des boutons de difficulté */
+    flex: 1; /* on utilise 1/3 de la largeur */
+    padding: 1rem; /* on ajoute du padding */
+    border: 2px solid var(--gris-clair); /* on ajoute une bordure grise */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    border-radius: 5px; /* on arrondit les coins */
+    cursor: pointer; /* on change le curseur */
+    transition: all 0.3s ease; /* on ajoute une transition */
+}
+
+.difficulty-btn.active { /* on définit le style du bouton actif */
+    background-color: var(--vert); /* on utilise la couleur vert */
+    color: var(--blanc); /* on utilise la couleur blanc pour le texte */
+    border-color: var(--vert); /* on utilise la couleur vert pour la bordure */
+}
+
+.range-labels { /* on définit le style des labels du slider */
+    display: flex; /* on utilise flexbox */
+    justify-content: space-between; /* on espace les éléments */
+    font-size: 0.9rem; /* on réduit la taille du texte */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    margin-top: 0.5rem; /* on ajoute de l'espace en haut */
+}
+
+/* Quiz */
+.quiz-container { /* on définit le style du conteneur du quiz */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    border-radius: 10px; /* on arrondit les coins */
+    padding: 2rem; /* on ajoute du padding */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+}
+
+.quiz-progress { /* on définit le style de la barre de progression */
+    width: 100%; /* on utilise 100% de la largeur */
+    height: 10px; /* on définit la hauteur */
+    background-color: var(--gris); /* on utilise la couleur gris */
+    border-radius: 5px; /* on arrondit les coins */
+    overflow: hidden; /* on cache le contenu qui dépasse */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+.progress-bar { /* on définit le style de la barre de progression */
+    height: 100%; /* on utilise 100% de la hauteur */
+    background-color: var(--vert); /* on utilise la couleur vert */
+    transition: width 0.3s ease; /* on ajoute une transition */
+    width: 0%; /* on initialise la largeur à 0% */
+}
+
+.quiz-header { /* on définit le style du header du quiz */
+    display: flex; /* on utilise flexbox */
+    justify-content: space-between; /* on espace les éléments */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+.question-counter { /* on définit le style du compteur de questions */
+    font-weight: bold; /* on rend le texte gras */
+    color: var(--bleu); /* on utilise la couleur bleu */
+}
+
+.timer { /* on définit le style du timer */
+    font-weight: bold; /* on rend le texte gras */
+    color: var(--vert); /* on utilise la couleur vert */
+    font-size: 1.2rem; /* on augmente la taille du texte */
+}
+
+.quiz-box { /* on définit le style de la boîte du quiz */
+    margin: 2rem 0; /* on ajoute de l'espace en haut et en bas */
+}
+
+.question-text { /* on définit le style du texte de la question */
+    font-size: 1.3rem; /* on augmente la taille du texte */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+    color: var(--bleu); /* on utilise la couleur bleu */
+}
+
+.options-container { /* on définit le style du conteneur des options */
+    display: flex; /* on utilise flexbox */
+    flex-direction: column; /* on stacked les éléments verticalement */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+.option-btn { /* on définit le style des boutons des options */
+    padding: 1rem; /* on ajoute du padding */
+    border: 2px solid var(--gris-clair); /* on ajoute une bordure grise */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    border-radius: 5px; /* on arrondit les coins */
+    cursor: pointer; /* on change le curseur */
+    text-align: left; /* on aligne le texte à gauche */
+    transition: all 0.3s ease; /* on ajoute une transition */
+    font-size: 1rem; /* on définit la taille du texte */
+}
+
+.option-btn:hover { /* on définit le style au survol */
+    background-color: var(--gris); /* on utilise la couleur gris */
+    border-color: var(--bleu); /* on utilise la couleur bleu pour la bordure */
+}
+
+.option-btn.selected { /* on définit le style du bouton sélectionné */
+    background-color: var(--vert); /* on utilise la couleur vert */
+    color: var(--blanc); /* on utilise la couleur blanc pour le texte */
+    border-color: var(--vert); /* on utilise la couleur vert pour la bordure */
+}
+
+.quiz-buttons { /* on définit le style du conteneur des boutons du quiz */
+    display: flex; /* on utilise flexbox */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+    justify-content: center; /* on centre les éléments */
+}
+
+/* Résultats */
+.results-box { /* on définit le style de la boîte des résultats */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+    text-align: center; /* on centre le texte */
+}
+
+.results-title { /* on définit le style du titre des résultats */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+.score-container { /* on définit le style du conteneur du score */
+    margin: 2rem 0; /* on ajoute de l'espace en haut et en bas */
+}
+
+.score-circle { /* on définit le style du cercle du score */
+    width: 150px; /* on définit la largeur */
+    height: 150px; /* on définit la hauteur */
+    border-radius: 50%; /* on arrondit le cercle */
+    background: linear-gradient(135deg, var(--vert), var(--bleu)); /* on ajoute un dégradé */
+    color: var(--blanc); /* on utilise la couleur blanc pour le texte */
+    display: flex; /* on utilise flexbox */
+    flex-direction: column; /* on stacked les éléments verticalement */
+    align-items: center; /* on aligne les éléments horizontalement */
+    justify-content: center; /* on centre les éléments */
+    margin: 0 auto 1rem; /* on centre le cercle */
+}
+
+.score-value { /* on définit le style de la valeur du score */
+    font-size: 3rem; /* on augmente la taille du texte */
+    font-weight: bold; /* on rend le texte gras */
+}
+
+.score-total { /* on définit le style du total du score */
+    font-size: 1.2rem; /* on augmente la taille du texte */
+}
+
+.score-percentage { /* on définit le style du pourcentage du score */
+    font-size: 1.5rem; /* on augmente la taille du texte */
+    color: var(--vert); /* on utilise la couleur vert */
+    font-weight: bold; /* on rend le texte gras */
+}
+
+.result-message { /* on définit le style du message des résultats */
+    font-size: 1.2rem; /* on augmente la taille du texte */
+    margin: 1.5rem 0; /* on ajoute de l'espace en haut et en bas */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+}
+
+.summary-box { /* on définit le style de la boîte du résumé */
+    background-color: var(--gris); /* on utilise la couleur gris */
+    padding: 1.5rem; /* on ajoute du padding */
+    border-radius: 5px; /* on arrondit les coins */
+    margin: 2rem 0; /* on ajoute de l'espace en haut et en bas */
+    text-align: left; /* on aligne le texte à gauche */
+}
+
+.summary-item { /* on définit le style d'un élément du résumé */
+    padding: 1rem; /* on ajoute du padding */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    border-left: 4px solid var(--gris-clair); /* on ajoute une bordure à gauche */
+    margin-bottom: 1rem; /* on ajoute de l'espace en bas */
+    border-radius: 3px; /* on arrondit les coins */
+}
+
+.summary-item.correct { /* on définit le style d'un élément correct */
+    border-left-color: var(--vert); /* on utilise la couleur vert pour la bordure */
+}
+
+.summary-item.incorrect { /* on définit le style d'un élément incorrect */
+    border-left-color: #d32f2f; /* on utilise une couleur rouge pour la bordure */
+}
+
+.summary-question { /* on définit le style de la question du résumé */
+    font-weight: bold; /* on rend le texte gras */
+    margin-bottom: 0.5rem; /* on ajoute de l'espace en bas */
+}
+
+.user-answer, .correct-answer, .explanation { /* on définit le style des réponses et explications */
+    margin: 0.5rem 0; /* on ajoute de l'espace en haut et en bas */
+    font-size: 0.95rem; /* on réduit la taille du texte */
+}
+
+.correct-answer { /* on définit le style de la bonne réponse */
+    color: var(--vert); /* on utilise la couleur vert */
+}
+
+.explanation { /* on définit le style de l'explication */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    font-style: italic; /* on utilise l'italique */
+}
+
+.results-buttons { /* on définit le style du conteneur des boutons des résultats */
+    display: flex; /* on utilise flexbox */
+    flex-direction: column; /* on stacked les éléments verticalement */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+    margin-top: 2rem; /* on ajoute de l'espace en haut */
+}
+
+/* Dashboard */
+.quick-actions { /* on définit le style du conteneur des actions rapides */
+    display: grid; /* on utilise grid */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* on crée une grille responsive */
+    gap: 1.5rem; /* on ajoute un espace entre les éléments */
+    margin-bottom: 3rem; /* on ajoute de l'espace en bas */
+}
+
+.action-card { /* on définit le style d'une carte d'action */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+    text-decoration: none; /* on enlève la décoration du texte */
+    color: var(--texte); /* on utilise la couleur texte */
+    transition: all 0.3s ease; /* on ajoute une transition */
+    text-align: center; /* on centre le texte */
+}
+
+.action-card:hover { /* on définit le style au survol */
+    transform: translateY(-5px); /* on ajoute une animation */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* on augmente l'ombre */
+}
+
+.action-icon { /* on définit le style de l'icône de l'action */
+    font-size: 2.5rem; /* on augmente la taille du texte */
+    display: block; /* on rend l'icône bloc */
+    margin-bottom: 1rem; /* on ajoute de l'espace en bas */
+}
+
+.action-card h3 { /* on définit le style du titre de l'action */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    margin-bottom: 0.5rem; /* on ajoute de l'espace en bas */
+}
+
+.stats-container { /* on définit le style du conteneur des statistiques */
+    margin-bottom: 3rem; /* on ajoute de l'espace en bas */
+}
+
+.stats-grid { /* on définit le style de la grille des statistiques */
+    display: grid; /* on utilise grid */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* on crée une grille responsive */
+    gap: 1.5rem; /* on ajoute un espace entre les éléments */
+    margin-top: 1.5rem; /* on ajoute de l'espace en haut */
+}
+
+.stat-card { /* on définit le style d'une carte de statistique */
+    background: linear-gradient(135deg, var(--bleu), var(--vert)); /* on ajoute un dégradé */
+    color: var(--blanc); /* on utilise la couleur blanc pour le texte */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    text-align: center; /* on centre le texte */
+}
+
+.stat-number { /* on définit le style du nombre de statistique */
+    font-size: 2rem; /* on augmente la taille du texte */
+    font-weight: bold; /* on rend le texte gras */
+    display: block; /* on rend le nombre bloc */
+}
+
+.stat-label { /* on définit le style du label de statistique */
+    font-size: 0.95rem; /* on réduit la taille du texte */
+    opacity: 0.9; /* on réduit l'opacité */
+}
+
+/* Historique */
+.history-container { /* on définit le style du conteneur de l'historique */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+}
+
+.history-list { /* on définit le style de la liste de l'historique */
+    display: flex; /* on utilise flexbox */
+    flex-direction: column; /* on stacked les éléments verticalement */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+    margin-top: 1.5rem; /* on ajoute de l'espace en haut */
+}
+
+.history-item { /* on définit le style d'un élément de l'historique */
+    display: flex; /* on utilise flexbox */
+    justify-content: space-between; /* on espace les éléments */
+    align-items: center; /* on aligne les éléments verticalement */
+    padding: 1rem; /* on ajoute du padding */
+    background-color: var(--gris); /* on utilise la couleur gris */
+    border-radius: 5px; /* on arrondit les coins */
+}
+
+.history-info h3 { /* on définit le style du titre de l'historique */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    margin-bottom: 0.25rem; /* on ajoute de l'espace en bas */
+}
+
+.history-info p { /* on définit le style de la date de l'historique */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    font-size: 0.9rem; /* on réduit la taille du texte */
+}
+
+.history-score { /* on définit le style du score de l'historique */
+    text-align: right; /* on aligne le texte à droite */
+}
+
+.score { /* on définit le style du score */
+    display: block; /* on rend le score bloc */
+    font-weight: bold; /* on rend le texte gras */
+    color: var(--bleu); /* on utilise la couleur bleu */
+}
+
+.percentage { /* on définit le style du pourcentage */
+    display: block; /* on rend le pourcentage bloc */
+    color: var(--vert); /* on utilise la couleur vert */
+    font-weight: bold; /* on rend le texte gras */
+}
+
+/* Bibliothèque */
+.search-box { /* on définit le style de la boîte de recherche */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+.search-box input { /* on définit le style du champ de recherche */
+    max-width: 400px; /* on définit la largeur maximale */
+}
+
+.courses-grid { /* on définit le style de la grille des cours */
+    display: grid; /* on utilise grid */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* on crée une grille responsive */
+    gap: 1.5rem; /* on ajoute un espace entre les éléments */
+}
+
+.course-card { /* on définit le style d'une carte de cours */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    padding: 1.5rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* on ajoute une ombre */
+    transition: all 0.3s ease; /* on ajoute une transition */
+}
+
+.course-card:hover { /* on définit le style au survol */
+    transform: translateY(-5px); /* on ajoute une animation */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* on augmente l'ombre */
+}
+
+.course-card h3 { /* on définit le style du titre du cours */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    margin-bottom: 0.5rem; /* on ajoute de l'espace en bas */
+}
+
+.course-author { /* on définit le style de l'auteur du cours */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    font-size: 0.9rem; /* on réduit la taille du texte */
+    margin-bottom: 1rem; /* on ajoute de l'espace en bas */
+}
+
+.course-stats { /* on définit le style des statistiques du cours */
+    margin-bottom: 1rem; /* on ajoute de l'espace en bas */
+}
+
+.views { /* on définit le style du nombre de vues */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    font-size: 0.9rem; /* on réduit la taille du texte */
+}
+
+.course-actions { /* on définit le style des actions du cours */
+    display: flex; /* on utilise flexbox */
+    gap: 0.5rem; /* on ajoute un espace entre les éléments */
+}
+
+/* Modal */
+.modal { /* on définit le style du modal */
+    position: fixed; /* on utilise la position fixe */
+    z-index: 1000; /* on définit l'index de z */
+    left: 0; /* on positionne à gauche */
+    top: 0; /* on positionne en haut */
+    width: 100%; /* on utilise 100% de la largeur */
+    height: 100%; /* on utilise 100% de la hauteur */
+    background-color: rgba(0,0,0,0.5); /* on utilise une couleur semi-transparente */
+}
+
+.modal-content { /* on définit le style du contenu du modal */
+    background-color: var(--blanc); /* on utilise la couleur blanc */
+    margin: 5% auto; /* on centre le modal */
+    padding: 2rem; /* on ajoute du padding */
+    border-radius: 10px; /* on arrondit les coins */
+    width: 80%; /* on utilise 80% de la largeur */
+    max-width: 600px; /* on définit la largeur maximale */
+}
+
+.close { /* on définit le style du bouton de fermeture */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    float: right; /* on aligne le bouton à droite */
+    font-size: 1.5rem; /* on augmente la taille du texte */
+    font-weight: bold; /* on rend le texte gras */
+    cursor: pointer; /* on change le curseur */
+}
+
+.close:hover { /* on définit le style au survol */
+    color: var(--texte); /* on utilise la couleur texte */
+}
+
+.add-comment { /* on définit le style du conteneur pour ajouter un commentaire */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+.add-comment textarea { /* on définit le style de la zone de texte */
+    width: 100%; /* on utilise 100% de la largeur */
+    padding: 1rem; /* on ajoute du padding */
+    border: 1px solid var(--gris-clair); /* on ajoute une bordure grise */
+    border-radius: 5px; /* on arrondit les coins */
+}
+
+.comments-list { /* on définit le style de la liste des commentaires */
+    display: flex; /* on utilise flexbox */
+    flex-direction: column; /* on stacked les éléments verticalement */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+}
+
+.comment { /* on définit le style d'un commentaire */
+    padding: 1rem; /* on ajoute du padding */
+    background-color: var(--gris); /* on utilise la couleur gris */
+    border-radius: 5px; /* on arrondit les coins */
+}
+
+.comment strong { /* on définit le style du nom de l'auteur */
+    color: var(--bleu); /* on utilise la couleur bleu */
+}
+
+.comment small { /* on définit le style de la date */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+}
+
+.empty-message { /* on définit le style du message vide */
+    text-align: center; /* on centre le texte */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    padding: 2rem; /* on ajoute du padding */
+}
+
+/* Hero */
+.hero { /* on définit le style du héros */
+    display: flex; /* on utilise flexbox */
+    align-items: center; /* on aligne les éléments verticalement */
+    justify-content: space-between; /* on espace les éléments */
+    gap: 3rem; /* on ajoute un espace entre les éléments */
+    margin: 3rem 0; /* on ajoute de l'espace en haut et en bas */
+}
+
+.hero-content { /* on définit le style du contenu du héros */
+    flex: 1; /* on utilise 50% de la largeur */
+}
+
+.hero-title { /* on définit le style du titre du héros */
+    font-size: 2.5rem; /* on augmente la taille du texte */
+    color: var(--bleu); /* on utilise la couleur bleu */
+    margin-bottom: 1rem; /* on ajoute de l'espace en bas */
+    line-height: 1.2; /* on réduit l'hauteur de ligne */
+}
+
+.highlight { /* on définit le style de la partie en évidence */
+    color: var(--vert); /* on utilise la couleur vert */
+}
+
+.hero-subtitle { /* on définit le style du sous-titre du héros */
+    font-size: 1.1rem; /* on augmente la taille du texte */
+    color: var(--texte-light); /* on utilise la couleur texte clair */
+    margin-bottom: 2rem; /* on ajoute de l'espace en bas */
+}
+
+.hero-buttons { /* on définit le style du conteneur des boutons */
+    display: flex; /* on utilise flexbox */
+    gap: 1rem; /* on ajoute un espace entre les éléments */
+    flex-wrap: wrap; /* on permet aux éléments de passer à la ligne */
+}
+
+/* Responsive */
+@media (max-width: 768px) { /* on définit les styles pour les petits écrans */
+    .navbar { /* on réduit le padding de la navbar */
+        padding: 1rem;
+    }
+
+    .page-title { /* on réduit la taille du titre */
+        font-size: 2rem;
+    }
+
+    .hero { /* on change la direction du héros */
+        flex-direction: column;
+    }
+
+    .quiz-header { /* on change la direction du header */
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .history-item { /* on change la direction de l'historique */
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .modal-content { /* on augmente la largeur du modal */
+        width: 90%;
+    }
+}
